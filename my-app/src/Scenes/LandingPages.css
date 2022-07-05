@@ -1,0 +1,55 @@
+body {
+    background: rgba(54, 57, 63, 0.884);
+    
+}
+#LandingPageHeader  {
+    font-size: 24px;
+    padding-top: 5rem;
+}
+img#chips {
+    width: 150px;
+    height: 150px;
+    margin: 2rem;
+    margin-top:5px;
+}
+img#bustabit-logo{
+    height: 45px;
+    flex-direction: row;
+    justify-content: center;
+}
+#button-container {
+    margin: auto;
+    width: 50vw;
+    padding-top: 5rem;
+}
+#bustabit-logo-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 5rem;
+}
+#bustabit-logo-title {
+    font-family: Courier New ,sans-serif;
+    font-size: 40px;
+    color: rgb(44,48,54);
+    margin: 0;
+}
+#landingpage-chips {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+#chips-container{
+    padding-top: 5rem;
+}
+h3 {
+    color: whitesmoke;
+    margin-bottom: 20px;
+}
+h4 {
+    color: rgb(44,48,54);
+    display: block;
+    margin-block-start: 1.33em;
+    margin-block-end: 1.33em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
