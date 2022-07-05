@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.calculateDelayAndSendWithStore = exports.addToGameDurationStore = exports.calculatePulse = exports.calculateGameDuration = exports.getGameDurationStore = exports.initializeGame = void 0;
+exports.getRandomMultiplier = exports.calculateDelayAndSendWithStore = exports.addToGameDurationStore = exports.calculatePulse = exports.calculateGameDuration = exports.getGameDurationStore = exports.initializeGame = void 0;
 const Headers_1 = require("../Headers/Headers");
 const Headers_2 = require("../Headers/Headers");
 let START_TIME;
@@ -119,3 +119,10 @@ function gameEndRoutine(crashed) {
         });
     });
 }
+function getRandomMultiplier() {
+    // random number between 0-1
+    // ((rand)^-1-.04 // this our randomly distrbutied multiplier
+    return parseInt((Math.random() ** -1 - 0.04).toFixed(2)); // NOTE: this causes a 4% difference in mean
+    //return (Math.random()**-1 - 0.04);
+}
+exports.getRandomMultiplier = getRandomMultiplier;

@@ -29,4 +29,23 @@ describe("test calculatePulse", () => {
     });
     it('Increment multiplier procedure', () => {
     });
+    it('test distribution for getRandomMultiplier', () => {
+        let multiArray = [];
+        const n_samples = 10000;
+        let sum = 0;
+        for (let i = 0; i < n_samples; i++) {
+            multiArray[i] = (0, Game_1.getRandomMultiplier)();
+            sum += multiArray[i];
+        }
+        const mean = sum / n_samples;
+        let greaterThanFive = 0;
+        for (let i = 0; i < n_samples; i++) {
+            if (multiArray[i] > 5) {
+                greaterThanFive += 1;
+            }
+        }
+        console.log((greaterThanFive / n_samples) * 100);
+        console.log(mean);
+        expect((greaterThanFive / n_samples) * 100).toBeLessThan(20);
+    });
 });

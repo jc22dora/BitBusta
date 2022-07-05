@@ -118,3 +118,10 @@ async function gameEndRoutine(crashed:number) {
         gameStartRoutine()
     })
 }
+
+export function getRandomMultiplier() {
+    // random number between 0-1
+    // ((rand)^-1-.04 // this our randomly distrbutied multiplier
+    return parseInt((Math.random()**-1 - 0.04).toFixed(2)); // NOTE: this causes a 4% difference in mean
+    //return (Math.random()**-1 - 0.04);
+}
