@@ -1,5 +1,6 @@
-import  {addToGameDurationStore, calculateGameDuration, calculatePulse, GameDuration, GameMultiplier, GameTimes, getGameDurationStore, getRandomMultiplier, TimePulse, } from '../utils/Game/Game';
-
+import  {addToGameDurationStore, calculateGameDuration, calculatePulse, GameDuration, GameMultiplier, gameRoutine, GameTimes, getGameDurationStore, getRandomMultiplier, TimePulse, } from '../utils/Game/Game';
+import io from 'socket.io-client';
+import { GAME_ENDING_HEADER, GAME_HEADER, GAME_INITITIALIZED_HEADER, GAME_STARTING_HEADER, NEW_MULTIPLIER_HEADER } from '../utils/Headers/Headers';
 describe("test calculatePulse", () => {
     const testMulti:  GameMultiplier = {
         multiplier: 1.01,
@@ -50,5 +51,37 @@ describe("test calculatePulse", () => {
         console.log((greaterThanFive/n_samples)*100)
         console.log(mean);
         expect((greaterThanFive/n_samples)*100).toBeLessThan(20);
+    })
+
+    it('test game routine', () => {
+        const socket = io("http://localhost:8079");
+        gameRoutine(socket);
+        let multiplierMessage = false;
+        let gameEndingMessage = false;
+        let gameInitializedMessage = false;
+        let gameStartingMessage = false;
+        let ms = 0;
+        let MS = 10000;
+        while( ms < MS) {
+            socket.on(GAME_HEADER, (data) => {
+                if(data.subheader === NEW_MULTIPLIER_HEADER) {
+                    multiplierMessage = true;
+                }
+                if(data.subheader === GAME_ENDING_HEADER) {
+                    gameEndingMessage = true;
+                }
+                if(data.subheader === GAME_INITITIALIZED_HEADER) {
+                    gameInitializedMessage = true;
+                }
+                if(data.subheader === GAME_STARTING_HEADER) {
+                    gameStartingMessage = true;
+                }
+            })
+            ms++;
+        }
+        expect(multiplierMessage).toBe(true);
+        expect(gameEndingMessage).toBe(true);
+        expect(gameInitializedMessage).toBe(true);
+        expect(gameStartingMessage).toBe(true);
     })
 })

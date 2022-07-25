@@ -9,39 +9,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRandomMultiplier = exports.calculateDelayAndSendWithStore = exports.addToGameDurationStore = exports.calculatePulse = exports.calculateGameDuration = exports.getGameDurationStore = exports.initializeGame = void 0;
+exports.gameEndRoutine = exports.gameLiveRoutine = exports.gameStartRoutine = exports.initializeGameRoutine = exports.gameEnd = exports.gameLive = exports.gameStart = exports.gameRoutine = exports.getRandomMultiplier = exports.calculateDelayAndSendWithStore = exports.addToGameDurationStore = exports.calculatePulse = exports.calculateGameDuration = exports.getGameDurationStore = void 0;
 const Headers_1 = require("../Headers/Headers");
 const Headers_2 = require("../Headers/Headers");
 let START_TIME;
 let GAME_TIME;
+let gameDurationStore = new Map();
+let globalCurrentMultiplier = {
+    multiplier: 0,
+};
+let globalCrashedAt = {
+    multiplier: 0,
+};
 const TICK_RATE = 150;
 const GAME_END_DELAY = 3000;
 const GAME_STARTING_DELAY = 5000;
 const GAME_DURATION_C = 166.66667;
 const GAME_DURATION_K = 0.01;
 let io;
-let gameDurationStore = new Map();
-function initializeGame(socketio) {
-    io = socketio;
-    sendMessageToClient(Headers_2.GAME_HEADER, Headers_1.GAME_INITITIALIZED_HEADER, Headers_1.GAME_INITITIALIZED_HEADER);
-    console.log('sent client message');
-    gameStartRoutine();
-}
-exports.initializeGame = initializeGame;
-function gameStartRoutine() {
-    return __awaiter(this, void 0, void 0, function* () {
-        setStartAndGameTime();
-        let tempDate = Date.now();
-        while (tempDate - START_TIME < GAME_STARTING_DELAY) {
-            if (tempDate - GAME_TIME > TICK_RATE) {
-                sendMessageToClient(Headers_2.GAME_HEADER, Headers_2.GAME_STARTING_HEADER, `COUNTDOWN ${tempDate}`);
-                GAME_TIME = tempDate;
-            }
-            tempDate = Date.now();
-        }
-        liveMultiplierNumber(generateMultiplier(Math.random()));
-    });
-}
 function setStartAndGameTime() {
     START_TIME = Date.now();
     GAME_TIME = START_TIME;
@@ -111,13 +96,14 @@ function calculateDelayAndSendWithStore(header, multiplierObject) {
     }
 }
 exports.calculateDelayAndSendWithStore = calculateDelayAndSendWithStore;
-function gameEndRoutine(crashed) {
-    return __awaiter(this, void 0, void 0, function* () {
-        sendMessageToClient(Headers_2.GAME_HEADER, Headers_2.GAME_ENDING_HEADER, `crashed @ ${crashed}`);
-        yield delay(GAME_END_DELAY).then(() => {
-            gameStartRoutine();
-        });
-    });
+function setGlobalMultiplier(newMultiplier) {
+    globalCurrentMultiplier.multiplier = newMultiplier;
+}
+function setGlobalCrashedAt(crashedAt) {
+    globalCrashedAt.multiplier = crashedAt;
+}
+function getGlobalMultiplier() {
+    return globalCurrentMultiplier;
 }
 function getRandomMultiplier() {
     // random number between 0-1
@@ -126,3 +112,78 @@ function getRandomMultiplier() {
     //return (Math.random()**-1 - 0.04);
 }
 exports.getRandomMultiplier = getRandomMultiplier;
+function gameRoutine(socket) {
+    initializeGameRoutine(socket);
+    gameStart();
+    setGlobalMultiplier(getRandomMultiplier());
+    gameLive();
+    gameEnd();
+}
+exports.gameRoutine = gameRoutine;
+function gameStart() {
+    setStartAndGameTime();
+    let tempDate = Date.now();
+    while (tempDate - START_TIME < GAME_STARTING_DELAY) {
+        if (tempDate - GAME_TIME > TICK_RATE) {
+            sendMessageToClient(Headers_2.GAME_HEADER, Headers_2.GAME_STARTING_HEADER, `COUNTDOWN ${tempDate}`);
+            GAME_TIME = tempDate;
+        }
+        tempDate = Date.now();
+    }
+}
+exports.gameStart = gameStart;
+function gameLive() {
+    return __awaiter(this, void 0, void 0, function* () {
+        setStartAndGameTime();
+        let currentMultiplier = 1.00;
+        while (currentMultiplier < globalCurrentMultiplier.multiplier) {
+            currentMultiplier += .01;
+            yield delay(calculateDelayAndSend(Headers_2.NEW_MULTIPLIER_HEADER, currentMultiplier)).then(() => {
+            });
+        }
+        setGlobalCrashedAt(currentMultiplier);
+    });
+}
+exports.gameLive = gameLive;
+function gameEnd() {
+    return __awaiter(this, void 0, void 0, function* () {
+        sendMessageToClient(Headers_2.GAME_HEADER, Headers_2.GAME_ENDING_HEADER, `crashed @ ${globalCrashedAt}`);
+        yield delay(GAME_END_DELAY).then(() => {
+        });
+    });
+}
+exports.gameEnd = gameEnd;
+function initializeGameRoutine(socketio) {
+    io = socketio;
+    sendMessageToClient(Headers_2.GAME_HEADER, Headers_1.GAME_INITITIALIZED_HEADER, Headers_1.GAME_INITITIALIZED_HEADER);
+    console.log('sent client message');
+    gameStartRoutine();
+}
+exports.initializeGameRoutine = initializeGameRoutine;
+function gameStartRoutine() {
+    return __awaiter(this, void 0, void 0, function* () {
+        setStartAndGameTime();
+        let tempDate = Date.now();
+        while (tempDate - START_TIME < GAME_STARTING_DELAY) {
+            if (tempDate - GAME_TIME > TICK_RATE) {
+                sendMessageToClient(Headers_2.GAME_HEADER, Headers_2.GAME_STARTING_HEADER, `COUNTDOWN ${tempDate}`);
+                GAME_TIME = tempDate;
+            }
+            tempDate = Date.now();
+        }
+        liveMultiplierNumber(generateMultiplier(Math.random()));
+    });
+}
+exports.gameStartRoutine = gameStartRoutine;
+function gameLiveRoutine() {
+}
+exports.gameLiveRoutine = gameLiveRoutine;
+function gameEndRoutine(crashed) {
+    return __awaiter(this, void 0, void 0, function* () {
+        sendMessageToClient(Headers_2.GAME_HEADER, Headers_2.GAME_ENDING_HEADER, `crashed @ ${crashed}`);
+        yield delay(GAME_END_DELAY).then(() => {
+            gameStartRoutine();
+        });
+    });
+}
+exports.gameEndRoutine = gameEndRoutine;

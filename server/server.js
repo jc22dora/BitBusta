@@ -4,6 +4,7 @@ const http = require('http');
 const {Server} = require("socket.io");
 const cors = require('cors');
 const initializeGame = require("./utils/Game/Game.js");
+let CONTINUE = true;
 
 app.use(cors());
 
@@ -19,7 +20,7 @@ const io = new Server(server, {
 server.listen(8079, () => {
     console.log('listening')
     io.emit("test", {message: "test"})
-    initializeGame.initializeGame(io);
+    initializeGame.gameRoutine(io);
 })
 
 io.on("connection", (socket) => {
