@@ -64,7 +64,7 @@ async function liveMultiplierNumber(randomMultiplier:number) {
     }
     gameEndRoutine(currentMultiplier);
 }
-function delay(ms:number) {
+export function delay(ms:number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 const generateMultiplier = (x:number) => {
@@ -76,9 +76,6 @@ function calculateDelayAndSend(header:string, multiplier:number){
     return (1.6*Math.pow(Math.E, 1/exponent));
 }
 
-function getPulse(multiplier: number) {
-
-}
 export function getGameDurationStore() {
     return gameDurationStore;
 }
@@ -104,14 +101,17 @@ export function calculateDelayAndSendWithStore(header:string, multiplierObject: 
     }
 }
 
-function setGlobalMultiplier(newMultiplier: number) {
+async function setGlobalMultiplier(newMultiplier: number) {
     globalCurrentMultiplier.multiplier = newMultiplier;
 }
 function setGlobalCrashedAt(crashedAt: number) {
     globalCrashedAt.multiplier = crashedAt;
 }
-function getGlobalMultiplier() {
-    return globalCurrentMultiplier;
+const randomMultiplier = async () => {
+    // random number between 0-1
+    // ((rand)^-1-.04 // this our randomly distrbutied multiplier
+    return parseInt((Math.random()**-1 - 0.04).toFixed(2)); // NOTE: this causes a 4% difference in mean
+    //return (Math.random()**-1 - 0.04);
 }
 
 export function getRandomMultiplier() {
@@ -129,7 +129,7 @@ export function gameRoutine(socket: any) {
     gameEnd();
 }
 
-export function gameStart() {
+export async function gameStart() {
     setStartAndGameTime();
     let tempDate = Date.now();
     while ( tempDate - START_TIME < GAME_STARTING_DELAY) {
@@ -145,8 +145,8 @@ export async function gameLive() {
     let currentMultiplier = 1.00;
     while(currentMultiplier < globalCurrentMultiplier.multiplier) {
         currentMultiplier += .01;
-        await delay(calculateDelayAndSend(NEW_MULTIPLIER_HEADER, currentMultiplier)).then(() => {
-        })
+        // await delay(calculateDelayAndSend(NEW_MULTIPLIER_HEADER, currentMultiplier)).then(() => {
+        // })
     }
     setGlobalCrashedAt(currentMultiplier);
 }
@@ -154,6 +154,7 @@ export async function gameLive() {
 export async function gameEnd() {
     sendMessageToClient(GAME_HEADER, GAME_ENDING_HEADER, `crashed @ ${globalCrashedAt}`);
     await delay(GAME_END_DELAY).then(() => {
+        
     })
 }
 
@@ -162,7 +163,7 @@ export function initializeGameRoutine(socketio: any) {
     io = socketio;
     sendMessageToClient(GAME_HEADER, GAME_INITITIALIZED_HEADER, GAME_INITITIALIZED_HEADER);
     console.log('sent client message');
-    gameStartRoutine();
+    //gameStartRoutine();
 } 
 export async function gameStartRoutine() {
     setStartAndGameTime();
@@ -175,9 +176,6 @@ export async function gameStartRoutine() {
         tempDate = Date.now();
     }
     liveMultiplierNumber(generateMultiplier(Math.random()));
-}
-export function gameLiveRoutine() {
-    
 }
 export async function gameEndRoutine(crashed:number) {
     sendMessageToClient(GAME_HEADER, GAME_ENDING_HEADER, `crashed @ ${crashed}`);

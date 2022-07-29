@@ -1,6 +1,10 @@
-import  {addToGameDurationStore, calculateGameDuration, calculatePulse, GameDuration, GameMultiplier, gameRoutine, GameTimes, getGameDurationStore, getRandomMultiplier, TimePulse, } from '../utils/Game/Game';
-import io from 'socket.io-client';
+import  {addToGameDurationStore, calculateGameDuration, calculatePulse, delay, GameDuration, GameMultiplier, gameRoutine, GameTimes, getGameDurationStore, getRandomMultiplier, TimePulse, } from '../utils/Game/Game';
+//import io from 'socket.io-client';
 import { GAME_ENDING_HEADER, GAME_HEADER, GAME_INITITIALIZED_HEADER, GAME_STARTING_HEADER, NEW_MULTIPLIER_HEADER } from '../utils/Headers/Headers';
+import {getIo, startServer, listenPromise, closeServer} from '../server.js'
+import * as run from '../utils/GameRun/GameRun';
+import { Server } from 'socket.io';
+import { LiveGameStats } from '../utils/Stats/Stats';
 describe("test calculatePulse", () => {
     const testMulti:  GameMultiplier = {
         multiplier: 1.01,
@@ -54,15 +58,19 @@ describe("test calculatePulse", () => {
     })
 
     it('test game routine', () => {
-        const socket = io("http://localhost:8079");
-        gameRoutine(socket);
+        const socket = getIo();//io("http://localhost:8079");
+        const m = async () => {
+            await gameRoutine(socket); }
+        
         let multiplierMessage = false;
         let gameEndingMessage = false;
         let gameInitializedMessage = false;
         let gameStartingMessage = false;
         let ms = 0;
         let MS = 10000;
+        m();
         while( ms < MS) {
+            
             socket.on(GAME_HEADER, (data) => {
                 if(data.subheader === NEW_MULTIPLIER_HEADER) {
                     multiplierMessage = true;
@@ -84,4 +92,24 @@ describe("test calculatePulse", () => {
         expect(gameInitializedMessage).toBe(true);
         expect(gameStartingMessage).toBe(true);
     })
+
+    it('GameRun Test', async () => {
+        await listenPromise().then(async () => {
+            let io = getIo();
+            await run.gameRoutine(io).then(async () => {
+                await closeServer();
+                io.close();
+                expect(run.getTest()).toBe(true);
+            });
+        })
+        
+    }, 12000)
 })
+describe("Stats", () => {
+    it('LiveGameStats',  () => {
+        const stats = new LiveGameStats();
+        expect(stats.multiplier).not.toBe(null);
+        expect(stats.gameDuration).not.toBe(null);
+    })
+    
+}) 
