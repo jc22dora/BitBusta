@@ -40,7 +40,7 @@ img#PlayPage-bustabit-logo{
     background-color: rgb(77, 75, 75);
 }
 #BetControls {
-    display: flex;
+    display: block;
     width:32vw;
     border-radius: 1rem;
 
@@ -84,3 +84,36 @@ img#PlayPage-bustabit-logo{
         "bottom-panel bottom-panel right-panel";
     padding: 0 5px;
 } */
+
+#multiplier {
+    font-size: 100px;
+}
+#message {
+    font-size: 100px;
+}
+
+#betbutton {
+    display:flex;
+    max-width: 100%;
+    min-width: 100%;
+    bottom:0;
+    padding-top:3rem;
+}
+#betinput {
+    padding-top: 3rem;
+    max-width: auto;
+    min-width: auto;
+    display: flex;
+}
+.user-ledger-table {
+    width: 100%;
+}
+.user-col {
+    width:50%;
+}
+table {
+    table-layout: fixed;
+}
+#even-col {
+    background-color: brown;
+}

@@ -4,6 +4,13 @@ import { GAME_HEADER, GAME_ENDING_HEADER, GAME_STARTING_HEADER, NEW_MULTIPLIER_H
 
 let START_TIME: number;
 let GAME_TIME: number;
+let gameDurationStore = new Map<GameMultiplier, GameTimes>();
+let globalCurrentMultiplier: GameMultiplier = {
+    multiplier: 0,
+};
+let globalCrashedAt: GameMultiplier = {
+    multiplier: 0,
+};
 const TICK_RATE = 150;
 const GAME_END_DELAY = 3000;
 const GAME_STARTING_DELAY = 5000;
@@ -27,25 +34,9 @@ export type GameDuration = {
 export type TimePulse = {
     timePulse: number, //milliseconds
 } 
-let gameDurationStore = new Map<GameMultiplier, GameTimes>();
-export function initializeGame(socketio: any) {
-    io = socketio;
-    sendMessageToClient(GAME_HEADER, GAME_INITITIALIZED_HEADER, GAME_INITITIALIZED_HEADER);
-    console.log('sent client message');
-    gameStartRoutine();
-} 
-async function gameStartRoutine() {
-    setStartAndGameTime();
-    let tempDate = Date.now();
-    while ( tempDate - START_TIME < GAME_STARTING_DELAY) {
-        if (tempDate - GAME_TIME > TICK_RATE) {
-            sendMessageToClient(GAME_HEADER, GAME_STARTING_HEADER, `COUNTDOWN ${tempDate}`)
-            GAME_TIME = tempDate;
-        }
-        tempDate = Date.now();
-    }
-    liveMultiplierNumber(generateMultiplier(Math.random()));
-}
+
+
+
  
 function setStartAndGameTime() {
     START_TIME = Date.now();
@@ -73,7 +64,7 @@ async function liveMultiplierNumber(randomMultiplier:number) {
     }
     gameEndRoutine(currentMultiplier);
 }
-function delay(ms:number) {
+export function delay(ms:number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 const generateMultiplier = (x:number) => {
@@ -85,9 +76,6 @@ function calculateDelayAndSend(header:string, multiplier:number){
     return (1.6*Math.pow(Math.E, 1/exponent));
 }
 
-function getPulse(multiplier: number) {
-
-}
 export function getGameDurationStore() {
     return gameDurationStore;
 }
@@ -112,11 +100,18 @@ export function calculateDelayAndSendWithStore(header:string, multiplierObject: 
         sendMessageToClient(GAME_HEADER, header, multiplierObject.multiplier);
     }
 }
-async function gameEndRoutine(crashed:number) {
-    sendMessageToClient(GAME_HEADER, GAME_ENDING_HEADER, `crashed @ ${crashed}`);
-    await delay(GAME_END_DELAY).then(() => {
-        gameStartRoutine()
-    })
+
+async function setGlobalMultiplier(newMultiplier: number) {
+    globalCurrentMultiplier.multiplier = newMultiplier;
+}
+function setGlobalCrashedAt(crashedAt: number) {
+    globalCrashedAt.multiplier = crashedAt;
+}
+const randomMultiplier = async () => {
+    // random number between 0-1
+    // ((rand)^-1-.04 // this our randomly distrbutied multiplier
+    return parseInt((Math.random()**-1 - 0.04).toFixed(2)); // NOTE: this causes a 4% difference in mean
+    //return (Math.random()**-1 - 0.04);
 }
 
 export function getRandomMultiplier() {
@@ -124,4 +119,67 @@ export function getRandomMultiplier() {
     // ((rand)^-1-.04 // this our randomly distrbutied multiplier
     return parseInt((Math.random()**-1 - 0.04).toFixed(2)); // NOTE: this causes a 4% difference in mean
     //return (Math.random()**-1 - 0.04);
+}
+
+export function gameRoutine(socket: any) {
+    initializeGameRoutine(socket);
+    gameStart();
+    setGlobalMultiplier(getRandomMultiplier());
+    gameLive();
+    gameEnd();
+}
+
+export async function gameStart() {
+    setStartAndGameTime();
+    let tempDate = Date.now();
+    while ( tempDate - START_TIME < GAME_STARTING_DELAY) {
+        if (tempDate - GAME_TIME > TICK_RATE) {
+            sendMessageToClient(GAME_HEADER, GAME_STARTING_HEADER, `COUNTDOWN ${tempDate}`)
+            GAME_TIME = tempDate;
+        }
+        tempDate = Date.now();
+    }
+}
+export async function gameLive() {
+    setStartAndGameTime()
+    let currentMultiplier = 1.00;
+    while(currentMultiplier < globalCurrentMultiplier.multiplier) {
+        currentMultiplier += .01;
+        // await delay(calculateDelayAndSend(NEW_MULTIPLIER_HEADER, currentMultiplier)).then(() => {
+        // })
+    }
+    setGlobalCrashedAt(currentMultiplier);
+}
+
+export async function gameEnd() {
+    sendMessageToClient(GAME_HEADER, GAME_ENDING_HEADER, `crashed @ ${globalCrashedAt}`);
+    await delay(GAME_END_DELAY).then(() => {
+        
+    })
+}
+
+
+export function initializeGameRoutine(socketio: any) {
+    io = socketio;
+    sendMessageToClient(GAME_HEADER, GAME_INITITIALIZED_HEADER, GAME_INITITIALIZED_HEADER);
+    console.log('sent client message');
+    //gameStartRoutine();
+} 
+export async function gameStartRoutine() {
+    setStartAndGameTime();
+    let tempDate = Date.now();
+    while ( tempDate - START_TIME < GAME_STARTING_DELAY) {
+        if (tempDate - GAME_TIME > TICK_RATE) {
+            sendMessageToClient(GAME_HEADER, GAME_STARTING_HEADER, `COUNTDOWN ${tempDate}`)
+            GAME_TIME = tempDate;
+        }
+        tempDate = Date.now();
+    }
+    liveMultiplierNumber(generateMultiplier(Math.random()));
+}
+export async function gameEndRoutine(crashed:number) {
+    sendMessageToClient(GAME_HEADER, GAME_ENDING_HEADER, `crashed @ ${crashed}`);
+    await delay(GAME_END_DELAY).then(() => {
+        gameStartRoutine();
+    })
 }
