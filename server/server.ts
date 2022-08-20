@@ -56,10 +56,6 @@ export function getIo() {
     return io;
 }
 
-export function getServerStatus() {
-    return SERVER_STATUS;
-}
-
 export async function startServer() {
     server.listen(8079, () => {
         SERVER_STATUS = true;

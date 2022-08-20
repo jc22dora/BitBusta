@@ -24,8 +24,9 @@ function sendMessageToClient(io, header, subheader, message) {
     });
 }
 exports.sendMessageToClient = sendMessageToClient;
-function createMessage(text) {
-    return new Message(text);
+function createMessage(obj) {
+    obj.toString();
+    return new Message(obj);
 }
 exports.createMessage = createMessage;
 class Message {

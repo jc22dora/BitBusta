@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.recursiveStart = exports.closeServer = exports.startServer = exports.getServerStatus = exports.getIo = exports.listenPromise = void 0;
+exports.recursiveStart = exports.closeServer = exports.startServer = exports.getIo = exports.listenPromise = void 0;
 const express = require("express");
 const app = express();
 const http = require("http");
@@ -59,10 +59,6 @@ function getIo() {
     return io;
 }
 exports.getIo = getIo;
-function getServerStatus() {
-    return SERVER_STATUS;
-}
-exports.getServerStatus = getServerStatus;
 function startServer() {
     return __awaiter(this, void 0, void 0, function* () {
         server.listen(8079, () => {

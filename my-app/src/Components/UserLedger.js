@@ -5,10 +5,10 @@ const UserLedger = () => {
         <table class="user-ledger-table">
             <thead>
                 <tr>
-                    <th>User</th>
-                    <th>@</th>
-                    <th>Bet</th>
-                    <th>Profit</th>
+                    <th id="even-col" class="user-col">User</th>
+                    <th id="odd-col">@</th>
+                    <th id="even-col">Bet</th>
+                    <th id="odd-col">Profit</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,7 +21,7 @@ const UserLedger = () => {
             </tbody>
         </table>
       </div>
-    </div>;
+    </div>
   }
   
 export default UserLedger;

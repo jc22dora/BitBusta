@@ -12,27 +12,25 @@ import { GAME_HEADER, GAME_ENDING_HEADER, GAME_INITITIALIZED_HEADER, GAME_STARTI
 //const socket = io.connect("http://localhost:8079");
 const socket = io("http://localhost:8079");
 const PlayPage = () => {
-  const [multiplier, setMultiplier] = useState(3);
+  const [multiplier, setMultiplier] = useState(false);
   const [message, setMessage] = useState('');
-  const sendMessage = () => {
+  const sendMessage = (msg) => {
+    console.log(msg)
   }
   useEffect(() => {
     socket.on(GAME_HEADER, (data) => {
-      console.log(data.message)
-      if(data.subheader === 'LIVE') {
-        setMessage(data.message);
-        //setMultiplier(data.message);
+      if(data.subheader === NEW_MULTIPLIER_HEADER) {
+        setMessage(false)
+        setMultiplier(data.message);
       }
       if(data.subheader === GAME_ENDING_HEADER) {
-        // setMessage(data.message);
-        // setMultiplier(false);
+        setMultiplier(false);
         setMessage(data.message);
       }
       if(data.subheader === GAME_INITITIALIZED_HEADER) {
         setMessage(data.message);
       }
       if(data.subheader === GAME_STARTING_HEADER) {
-        // setMessage(data.message);
         setMessage(data.message);
       }
     })
@@ -42,8 +40,8 @@ const PlayPage = () => {
       <Navbar></Navbar>
         <div id="grid-container">
             <div id="left-side">
-                <BetControls props={{multiplier, sendMessage, message}}></BetControls>
-                <BitRollChart></BitRollChart>
+                <BitRollChart props={{multiplier, sendMessage, message}}></BitRollChart>
+                <BetControls props={{sendMessage}}></BetControls>
                 <ChatBox></ChatBox>
     </div>
             <div id="right-side">

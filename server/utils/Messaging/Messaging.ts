@@ -8,11 +8,11 @@ export async function sendMessageToClient(io: any, header: MSGT.Header, subheade
         },
     }
     io.emit(send.header, send.payload);
-    console.log('MESSAGE SENT TO CLIENT')
 }
 
-export function createMessage(text: string) {
-    return new Message(text)
+export function createMessage(obj: any) {
+    obj.toString();
+    return new Message(obj)
 }
 
 export class Message {

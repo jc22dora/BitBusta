@@ -5,6 +5,7 @@ import {getIo, startServer, listenPromise, closeServer} from '../server.js'
 import * as run from '../utils/GameRun/GameRun';
 import { Server } from 'socket.io';
 import { LiveGameStats } from '../utils/Stats/Stats';
+import { GameTimingStore } from '../utils/GameTimingStore/GameTimingStore';
 describe("test calculatePulse", () => {
     const testMulti:  GameMultiplier = {
         multiplier: 1.01,
@@ -113,3 +114,4 @@ describe("Stats", () => {
     })
     
 }) 
+
