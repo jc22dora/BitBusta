@@ -8,6 +8,7 @@ const material_1 = require("@mui/material");
 const FormControl_1 = __importDefault(require("@mui/material/FormControl"));
 const InputLabel_1 = __importDefault(require("@mui/material/InputLabel"));
 const TextField_1 = __importDefault(require("@mui/material/TextField"));
+require("./BetControls.css");
 function BetControls(props) {
     const [bet, setBet] = react_1.default.useState(1);
     const [payout, setPayout] = react_1.default.useState(1);

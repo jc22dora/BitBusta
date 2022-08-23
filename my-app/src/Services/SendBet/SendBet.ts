@@ -1,4 +1,4 @@
-import { GameBet } from "../Interfaces/GameBet/GameBet";
+import { GameBet } from "../../Interfaces/GameBet/GameBet";
 
 export async function postBet(wager:number) {
     let bet:GameBet = {

@@ -4,6 +4,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import FilledInput from '@mui/material/FilledInput';
 import TextField from '@mui/material/TextField';
+import './BetControls.css'
 
 export interface BetControlsProps {
     sendBet: (bet:number) => Promise<void>,

@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
+require("./UserLedger.css");
 const UserLedger = () => {
     return react_1.default.createElement("div", { className: "UserLedger" },
         react_1.default.createElement("div", { className: "user-ledger-table-container" },

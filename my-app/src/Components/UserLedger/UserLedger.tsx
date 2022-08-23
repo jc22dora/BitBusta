@@ -1,4 +1,6 @@
 import React from "react";
+import './UserLedger.css'
+
 const UserLedger = () => {
     return <div className="UserLedger">  
       <div className="user-ledger-table-container">

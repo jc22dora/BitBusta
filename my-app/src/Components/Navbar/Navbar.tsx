@@ -1,7 +1,8 @@
 import React from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import BitBusta from '../../Assets/BitBusta.ico';
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import './NavBar.css';  
 
 const icon = "fas fa-question-circle" as IconProp;
 

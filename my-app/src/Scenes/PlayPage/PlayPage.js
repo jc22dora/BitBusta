@@ -19,11 +19,10 @@ const ChatBox_1 = __importDefault(require("../../Components/ChatBox/ChatBox"));
 const Navbar_1 = __importDefault(require("../../Components/Navbar/Navbar"));
 const UserLedger_1 = __importDefault(require("../../Components/UserLedger/UserLedger"));
 require("./PlayPage.css");
-require("../../Styles/UserLedger.css");
 const socket_io_client_1 = __importDefault(require("socket.io-client"));
 const react_2 = require("react");
-const GamingHeaders_js_1 = require("../../Interfaces/GamingHeaders.js");
-const SendBet_1 = require("../../Services/SendBet");
+const GamingHeaders_js_1 = require("../../Interfaces/GamingHeaders/GamingHeaders.js");
+const SendBet_1 = require("../../Services/SendBet/SendBet");
 const socket = (0, socket_io_client_1.default)("http://localhost:8079");
 const PlayPage = () => {
     const [multiplier, setMultiplier] = (0, react_2.useState)(false);
@@ -32,11 +31,10 @@ const PlayPage = () => {
         let resp = yield (0, SendBet_1.postBet)(bet);
         console.log(resp);
     });
-    // <BetControls props={{sendBet}}></BetControls>
     (0, react_2.useEffect)(() => {
         socket.on(GamingHeaders_js_1.GAME_HEADER, (data) => {
             if (data.subheader === GamingHeaders_js_1.NEW_MULTIPLIER_HEADER) {
-                setMessage(''); //setMessage(false)
+                setMessage('');
                 setMultiplier(data.message);
             }
             if (data.subheader === GamingHeaders_js_1.GAME_ENDING_HEADER) {
