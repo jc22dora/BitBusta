@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
 const react_fontawesome_1 = require("@fortawesome/react-fontawesome");
 const BitBusta_ico_1 = __importDefault(require("../../Assets/BitBusta.ico"));
+require("./NavBar.css");
 const icon = "fas fa-question-circle";
 const Navbar = () => {
     return react_1.default.createElement("div", { className: "Navbar" },

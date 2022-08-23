@@ -1,4 +1,5 @@
 import React from "react";
+import './BitRollChart.css'
 export interface BitRollChartProps {
     
 }

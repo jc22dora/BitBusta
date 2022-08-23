@@ -6,3 +6,12 @@
 }
 #br-message {
 }
+#BitRollChart {
+    display: flex;
+    width:32vw;
+    border-radius: 1rem;
+
+    height: 42vh;
+    margin: .2vh;
+    background-color: rgb(77, 75, 75);
+}
