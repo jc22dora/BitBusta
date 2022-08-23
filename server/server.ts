@@ -6,12 +6,13 @@ import cors = require('cors');
 //const initializeGame = require("./utils/Game/Game.js");
 import initializeGameRun = require("./utils/GameRun/GameRun.js");
 import util = require('node:util');
+import * as api from './services/api/Api'
 let CONTINUE = true;
 let SERVER_STATUS = false;
 let NUM_GAME = 10;
 
 app.use(cors());
-
+api.startApi()
 const server = http.createServer(app);
 
 const io = new Server(server, {

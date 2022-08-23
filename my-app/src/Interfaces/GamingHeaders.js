@@ -11,3 +11,4 @@ exports.GAME_STARTING_HEADER = 'GAME_STARTING';
 exports.NEW_MULTIPLIER_HEADER = 'NEW_MULTIPLIER';
 // Ending
 exports.GAME_ENDING_HEADER = 'GAME_ENDING';
+//# sourceMappingURL=GamingHeaders.js.map

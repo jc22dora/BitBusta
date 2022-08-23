@@ -20,7 +20,6 @@ function sendMessageToClient(io, header, subheader, message) {
             },
         };
         io.emit(send.header, send.payload);
-        console.log('MESSAGE SENT TO CLIENT');
     });
 }
 exports.sendMessageToClient = sendMessageToClient;

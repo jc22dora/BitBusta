@@ -7,9 +7,13 @@ import * as Headers from "../Headers/Headers";
 import { createMessage, Message, sendMessageToClient } from "../Messaging/Messaging";
 import { getRandomMultiplier, LiveGameMultiplier, LiveGameStats } from "../Stats/Stats";
 import {GameTimingStore} from "../GameTimingStore/GameTimingStore";
+import { GameLog } from "../../Services/GameLog";
+import { insertGameLog } from "../../Services/dboperations/dboperations";
 
-let START_TIME: number;
-let GAME_TIME: number;
+let START_TIME: Date;
+let END_TIME: Date;
+let currBankRoll = 121389;
+let currBetPool = 12;
 let io: any;
 export var test: any;
 let LiveGame: LiveGameStats;
@@ -27,6 +31,15 @@ export async function gameRoutine(socket: any) {
                 await gameLive().then(async() => {
                     console.log(Date.now()-now);
                     await gameEnd().then(() => {
+                        let gameLog = new GameLog({
+                            GameId:0, 
+                            StartDate:START_TIME, 
+                            EndDate:END_TIME, 
+                            BankRollBalance:currBankRoll, 
+                            NetBetPool:currBetPool, 
+                            CrashMultiplier:LiveGame.multiplier
+                        });
+                        insertGameLog(gameLog)
                         console.log(Date.now()-now);
                     })
                 })
@@ -72,10 +85,8 @@ export async function gameLive() {
     }
 }
 export async function gameEnd() {
-    
+    END_TIME = new Date();
     sendMessageToClient(io, Headers.GAME_HEADER, Headers.GAME_ENDING, createMessage(`crashed @ ${LiveGame.multiplier}`));
-    
-    test = true;
     return delay(C.GAME_END_DELAY)
 }
 export function getTest() {
@@ -83,8 +94,7 @@ export function getTest() {
 }
 
 function setStartAndGameTime() {
-    START_TIME = Date.now();
-    GAME_TIME = START_TIME;
+    START_TIME = new Date();
 }
 
 function calculateDelayAndSend(header: SubHeader, multiplier: LiveGameMultiplier) {

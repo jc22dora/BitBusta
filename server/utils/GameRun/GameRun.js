@@ -17,8 +17,12 @@ const Headers = require("../Headers/Headers");
 const Messaging_1 = require("../Messaging/Messaging");
 const Stats_1 = require("../Stats/Stats");
 const GameTimingStore_1 = require("../GameTimingStore/GameTimingStore");
+const GameLog_1 = require("../../Services/GameLog");
+const dboperations_1 = require("../../Services/dboperations/dboperations");
 let START_TIME;
-let GAME_TIME;
+let END_TIME;
+let currBankRoll = 121389;
+let currBetPool = 12;
 let io;
 let LiveGame;
 let timingStore = new GameTimingStore_1.GameTimingStore();
@@ -35,6 +39,15 @@ function gameRoutine(socket) {
                     yield gameLive().then(() => __awaiter(this, void 0, void 0, function* () {
                         console.log(Date.now() - now);
                         yield gameEnd().then(() => {
+                            let gameLog = new GameLog_1.GameLog({
+                                GameId: 0,
+                                StartDate: START_TIME,
+                                EndDate: END_TIME,
+                                BankRollBalance: currBankRoll,
+                                NetBetPool: currBetPool,
+                                CrashMultiplier: LiveGame.multiplier
+                            });
+                            (0, dboperations_1.insertGameLog)(gameLog);
                             console.log(Date.now() - now);
                         });
                     }));
@@ -92,8 +105,8 @@ function gameLive() {
 exports.gameLive = gameLive;
 function gameEnd() {
     return __awaiter(this, void 0, void 0, function* () {
+        END_TIME = new Date();
         (0, Messaging_1.sendMessageToClient)(io, Headers.GAME_HEADER, Headers.GAME_ENDING, (0, Messaging_1.createMessage)(`crashed @ ${LiveGame.multiplier}`));
-        exports.test = true;
         return (0, Game_1.delay)(C.GAME_END_DELAY);
     });
 }
@@ -103,8 +116,7 @@ function getTest() {
 }
 exports.getTest = getTest;
 function setStartAndGameTime() {
-    START_TIME = Date.now();
-    GAME_TIME = START_TIME;
+    START_TIME = new Date();
 }
 function calculateDelayAndSend(header, multiplier) {
     (0, Messaging_1.sendMessageToClient)(io, Headers.GAME_HEADER, header, (0, Messaging_1.createMessage)(multiplier));

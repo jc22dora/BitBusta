@@ -18,10 +18,12 @@ const cors = require("cors");
 //const initializeGame = require("./utils/Game/Game.js");
 const initializeGameRun = require("./utils/GameRun/GameRun.js");
 const util = require("node:util");
+const api = require("./services/api/Api");
 let CONTINUE = true;
 let SERVER_STATUS = false;
 let NUM_GAME = 10;
 app.use(cors());
+api.startApi();
 const server = http.createServer(app);
 const io = new socket_io_1.Server(server, {
     cors: {

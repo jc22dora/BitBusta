@@ -15,6 +15,7 @@ describe("GameTimingStore", () => {
         expect(GameTimingStore_1.GameTimingStore.checkAndTrim(1.001, 3)).toBe(1.001);
         expect(GameTimingStore_1.GameTimingStore.checkAndTrim(1.001111111, 3)).toBe(1.001);
         expect(GameTimingStore_1.GameTimingStore.checkAndTrim(1.01, 3)).toBe(1.01);
+        expect(GameTimingStore_1.GameTimingStore.checkAndTrim(1, 3)).toBe(1.00);
     });
 });
 //# sourceMappingURL=GameTimingStore.test.js.map
