@@ -6,7 +6,7 @@ import FilledInput from '@mui/material/FilledInput';
 import TextField from '@mui/material/TextField';
 
 export interface BetControlsProps {
-    sendBet: (bet:number) => Promise<void>,
+    sendBet: (bet:number) => any,
 }
 
 

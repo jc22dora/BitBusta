@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTest = exports.gameEnd = exports.gameLive = exports.setGlobalMultiplier = exports.gameStart = exports.initializeGameRoutine = exports.gameRoutine = exports.test = void 0;
+exports.isGameLive = exports.getTest = exports.gameEnd = exports.gameLive = exports.setGlobalMultiplier = exports.gameStart = exports.initializeGameRoutine = exports.gameRoutine = exports.test = void 0;
 const C = require("../Constants/Constants");
 const Game_1 = require("../Game/Game");
 //import { calculatePulse } from "../GameTimingStore/GameTimingStore";
@@ -26,6 +26,7 @@ let currBetPool = 12;
 let io;
 let LiveGame;
 let timingStore = new GameTimingStore_1.GameTimingStore();
+let GAME_LIVE = null;
 function gameRoutine(socket) {
     return __awaiter(this, void 0, void 0, function* () {
         const now = Date.now();
@@ -59,6 +60,7 @@ function gameRoutine(socket) {
 exports.gameRoutine = gameRoutine;
 function initializeGameRoutine(socket) {
     return __awaiter(this, void 0, void 0, function* () {
+        let GAME_LIVE = false;
         io = socket;
         (0, Messaging_1.sendMessageToClient)(io, Headers.GAME, Headers.GAME_INITITIALIZED, new Messaging_1.Message('initializing'));
         LiveGame = new Stats_1.LiveGameStats();
@@ -94,6 +96,7 @@ function gameLive() {
         // sendMessageToClient(io, Headers.GAME, Headers.GAME_LIVE, new Message('live'));
         // return delay(LiveGame.gameDuration*1000).then( () => {
         // });
+        let GAME_LIVE = true;
         var currentMultiplier = 1.00;
         while (currentMultiplier < LiveGame.multiplier) {
             currentMultiplier += .01;
@@ -122,4 +125,8 @@ function calculateDelayAndSend(header, multiplier) {
     (0, Messaging_1.sendMessageToClient)(io, Headers.GAME_HEADER, header, (0, Messaging_1.createMessage)(multiplier));
     return 10000 * timingStore.getPulse(multiplier);
 }
+function isGameLive() {
+    return GAME_LIVE;
+}
+exports.isGameLive = isGameLive;
 //# sourceMappingURL=GameRun.js.map

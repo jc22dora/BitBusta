@@ -9,20 +9,20 @@ import "../../Styles/UserLedger.css";
 import io from 'socket.io-client';
 import { useEffect, useState} from "react";
 import { GAME_HEADER, GAME_ENDING_HEADER, GAME_INITITIALIZED_HEADER, GAME_STARTING_HEADER, NEW_MULTIPLIER_HEADER } from "../../Interfaces/GamingHeaders.js";
-import {postBet} from '../../Services/SendBet'
+import {sendBet} from '../../Services/SendBet'
 const socket = io("http://localhost:8079");
 const PlayPage = () => {
   const [multiplier, setMultiplier] = useState(false);
   const [message, setMessage] = useState('');
-  const sendBet = async(bet: number) => {
-    let resp = await postBet(bet);
-    console.log(resp)
+  const emitBet = (bet: number) => {
+    //let resp = await postBet(bet);
+    sendBet(socket, bet);
   }
   // <BetControls props={{sendBet}}></BetControls>
   useEffect(() => {
     socket.on(GAME_HEADER, (data) => {
       if(data.subheader === NEW_MULTIPLIER_HEADER) {
-        setMessage(''); //setMessage(false)
+        setMessage(''); 
         setMultiplier(data.message);
       }
       if(data.subheader === GAME_ENDING_HEADER) {
@@ -36,6 +36,14 @@ const PlayPage = () => {
         setMessage(data.message);
       }
     })
+    socket.on('BET', (data) => {
+      if(data.status) {
+
+      } else{
+        alert(data.message);
+      }
+      alert(data.message);
+    })
   }, [socket])
   return (
     <div className="PlayPage">
@@ -43,7 +51,7 @@ const PlayPage = () => {
         <div id="grid-container">
             <div id="left-side">
                 <BitRollChart props={{multiplier, message}}></BitRollChart>
-                <BetControls sendBet={sendBet}></BetControls> 
+                <BetControls sendBet={emitBet}></BetControls> 
                 <ChatBox></ChatBox>
     </div>
             <div id="right-side">

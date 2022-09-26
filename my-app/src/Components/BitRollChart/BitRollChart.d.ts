@@ -1,3 +1,4 @@
+/// <reference types="react" />
 export interface BitRollChartProps {
 }
 declare const BitRollChart: ({ props }: any) => JSX.Element;

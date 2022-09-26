@@ -19,6 +19,8 @@ export var test: any;
 let LiveGame: LiveGameStats;
 let timingStore: GameTimingStore = new GameTimingStore();
 
+let GAME_LIVE: boolean | null = null;
+
 export async function gameRoutine(socket: any) {
     const now = Date.now();
     console.log(Date.now());
@@ -48,6 +50,7 @@ export async function gameRoutine(socket: any) {
     })
 }
 export async function initializeGameRoutine(socket: any) {
+    let GAME_LIVE = false;
     io = socket;
     sendMessageToClient(io, Headers.GAME, Headers.GAME_INITITIALIZED, new Message('initializing'))
     LiveGame = new LiveGameStats();
@@ -76,6 +79,7 @@ export async function gameLive() {
     // sendMessageToClient(io, Headers.GAME, Headers.GAME_LIVE, new Message('live'));
     // return delay(LiveGame.gameDuration*1000).then( () => {
     // });
+    let GAME_LIVE = true;
     var currentMultiplier= 1.00;
     while(currentMultiplier < LiveGame.multiplier) {
         currentMultiplier += .01;
@@ -101,4 +105,8 @@ function calculateDelayAndSend(header: SubHeader, multiplier: LiveGameMultiplier
     sendMessageToClient(io, Headers.GAME_HEADER, header, createMessage(multiplier));
 
     return 10000*timingStore.getPulse(multiplier);
+}
+
+export function isGameLive(): boolean | null {
+    return GAME_LIVE;
 }

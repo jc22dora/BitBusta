@@ -25,3 +25,17 @@ export async function postBet(wager:number) {
       return { status: 'fail', message: 'API CALL ERROR', error: err.message };
     });
 }
+
+export function sendBet(socket:any, wager:number) {
+  let bet:GameBet = {
+    GameId: 1,
+    UserId: 1,
+    UserBetTime: new Date(),
+    UserBetPullTime: new Date(),
+    UserBet: 21,
+    UserBetPayout: wager
+  }
+  socket.emit('bet', bet, (response: any) => {
+    console.log(response); // "got it"
+  });
+}
