@@ -1,18 +1,18 @@
-import React from "react";
-import { Button, Input } from '@mui/material';
+import React, { useState } from "react";
+import { Button} from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import FilledInput from '@mui/material/FilledInput';
 import TextField from '@mui/material/TextField';
 
 export interface BetControlsProps {
     sendBet: (bet:number) => any,
+    betButtonMessage: string,
+    betAbility: boolean,
+    setBetAbility: any,
 }
-
-
 function BetControls(props: BetControlsProps) {
-  const [bet, setBet] = React.useState(1);
-  const [payout, setPayout] = React.useState(1);
+  const [bet, setBet] = useState(1);
+  const [payout, setPayout] = useState(1);
 
   const handleChange = (event: any) => {
     const onlyNums = event.target.value.replace(/[^0-9]/g, '');
@@ -24,6 +24,10 @@ function BetControls(props: BetControlsProps) {
   const handlePayoutChange = (event: any) => {
     const onlyNums = event.target.value.replace(/[^0-9]/g, '');
     setPayout(onlyNums)
+  }
+  const handleSendBet = (bet: number) => {
+    props.sendBet(bet);
+    props.setBetAbility(false);
   }
     return <div className="BetControls">  
       <div id='BetControls'>
@@ -40,13 +44,12 @@ function BetControls(props: BetControlsProps) {
         
         <div id="betbutton">
           <Button variant="contained" style={{
-            backgroundColor: "rgb(188, 124, 210",  
+            backgroundColor: props.betAbility?"rgb(188, 124, 210)" :"rgb(0, 0, 0)",  
             width:'100%', bottom:'0', 
             maxHeight: '50px', 
             minHeight: '50px'
-            }} onClick={(e)=> {props.sendBet(bet)}}>Bet</Button>
+            }} onClick={(e)=> {handleSendBet(bet)}}>{props.betButtonMessage}</Button>
         </div>
-        
         </div>
     </div>;
   }

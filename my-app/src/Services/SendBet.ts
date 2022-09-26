@@ -1,4 +1,5 @@
 import { GameBet } from "../Interfaces/GameBet/GameBet";
+import { NEW_BET } from "../Interfaces/GamingHeaders";
 
 export async function postBet(wager:number) {
     let bet:GameBet = {
@@ -35,7 +36,7 @@ export function sendBet(socket:any, wager:number) {
     UserBet: 21,
     UserBetPayout: wager
   }
-  socket.emit('bet', bet, (response: any) => {
+  socket.emit(NEW_BET, bet, (response: any) => {
     console.log(response); // "got it"
   });
 }

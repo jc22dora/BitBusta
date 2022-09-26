@@ -26,7 +26,7 @@ let currBetPool = 12;
 let io;
 let LiveGame;
 let timingStore = new GameTimingStore_1.GameTimingStore();
-let GAME_LIVE = null;
+let GAME_LIVE = false;
 function gameRoutine(socket) {
     return __awaiter(this, void 0, void 0, function* () {
         const now = Date.now();
@@ -60,7 +60,6 @@ function gameRoutine(socket) {
 exports.gameRoutine = gameRoutine;
 function initializeGameRoutine(socket) {
     return __awaiter(this, void 0, void 0, function* () {
-        let GAME_LIVE = false;
         io = socket;
         (0, Messaging_1.sendMessageToClient)(io, Headers.GAME, Headers.GAME_INITITIALIZED, new Messaging_1.Message('initializing'));
         LiveGame = new Stats_1.LiveGameStats();
@@ -96,7 +95,7 @@ function gameLive() {
         // sendMessageToClient(io, Headers.GAME, Headers.GAME_LIVE, new Message('live'));
         // return delay(LiveGame.gameDuration*1000).then( () => {
         // });
-        let GAME_LIVE = true;
+        GAME_LIVE = true;
         var currentMultiplier = 1.00;
         while (currentMultiplier < LiveGame.multiplier) {
             currentMultiplier += .01;
@@ -108,6 +107,7 @@ function gameLive() {
 exports.gameLive = gameLive;
 function gameEnd() {
     return __awaiter(this, void 0, void 0, function* () {
+        GAME_LIVE = false;
         END_TIME = new Date();
         (0, Messaging_1.sendMessageToClient)(io, Headers.GAME_HEADER, Headers.GAME_ENDING, (0, Messaging_1.createMessage)(`crashed @ ${LiveGame.multiplier}`));
         return (0, Game_1.delay)(C.GAME_END_DELAY);

@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendBet = exports.postBet = void 0;
+const GamingHeaders_1 = require("../Interfaces/GamingHeaders");
 function postBet(wager) {
     return __awaiter(this, void 0, void 0, function* () {
         let bet = {
@@ -47,7 +48,7 @@ function sendBet(socket, wager) {
         UserBet: 21,
         UserBetPayout: wager
     };
-    socket.emit('bet', bet, (response) => {
+    socket.emit(GamingHeaders_1.NEW_BET, bet, (response) => {
         console.log(response); // "got it"
     });
 }

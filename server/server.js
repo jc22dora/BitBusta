@@ -19,6 +19,7 @@ const cors = require("cors");
 const initializeGameRun = require("./utils/GameRun/GameRun.js");
 const util = require("node:util");
 const api = require("./services/api/Api");
+const Headers_js_1 = require("./utils/Headers/Headers.js");
 const node_fetch_1 = require("node-fetch");
 let CONTINUE = true;
 let SERVER_STATUS = false;
@@ -28,7 +29,7 @@ api.startApi();
 const server = http.createServer(app);
 const io = new socket_io_1.Server(server, {
     cors: {
-        origin: "http://localhost:3002",
+        origin: "http://localhost:3000",
         methods: ["GET", "POST"],
     }
 });
@@ -47,19 +48,13 @@ server.on('listening', () => {
 });
 io.on("connection", (socket) => {
     console.log(socket.id + ' connected');
-    socket.on("test", (data) => {
-        console.log(data.content);
-    });
-    socket.on('listening', (data) => {
-        console.log(data.content + 'listening');
-    });
-    socket.emit("test", { message: "test" });
     socket.on('disconnect', () => {
         console.log(socket.id + ' discconected');
     });
-    socket.on('bet', (message) => {
+    socket.on(Headers_js_1.NEW_BET, (message) => {
         if (initializeGameRun.isGameLive()) {
-            io.emit('BET', { status: false, message: 'game live: bet cannot be placed' });
+            io.emit(Headers_js_1.BET_RESPONSE, { status: false, message: 'game live: bet cannot be placed' });
+            console.log('game live: bet cannot be placed');
         }
         else {
             return (0, node_fetch_1.default)(`http://localhost:8089/api/bets`, {
@@ -71,7 +66,6 @@ io.on("connection", (socket) => {
                 body: JSON.stringify(message),
             })
                 .then((response) => {
-                console.log(response);
                 return response.json();
             })
                 .catch((err) => {

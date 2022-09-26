@@ -6,3 +6,6 @@ export declare type GAME_STARTING_RESPONSE = {
 };
 export declare const NEW_MULTIPLIER_HEADER = "NEW_MULTIPLIER";
 export declare const GAME_ENDING_HEADER = "GAME_ENDING";
+export declare const NEW_BET = "BET";
+export declare const BET_RESPONSE = "BET_RESPONSE";
+export declare const BET_BUTTON = "Bet";

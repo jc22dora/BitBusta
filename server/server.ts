@@ -7,7 +7,7 @@ import cors = require('cors');
 import initializeGameRun = require("./utils/GameRun/GameRun.js");
 import util = require('node:util');
 import * as api from './services/api/Api'
-import { GAME } from "./utils/Headers/Headers.js";
+import { BET_RESPONSE, GAME, NEW_BET } from "./utils/Headers/Headers.js";
 import fetch from 'node-fetch'
 let CONTINUE = true;
 let SERVER_STATUS = false;
@@ -19,7 +19,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3002",
+        origin: "http://localhost:3000",
         methods: ["GET", "POST"],
     }
 });
@@ -41,20 +41,14 @@ server.on('listening', () => {
 
 io.on("connection", (socket) => {
     console.log(socket.id+' connected');
-    socket.on("test", (data) => { 
-        console.log(data.content)
-    })
-    socket.on('listening', (data) => {
-        console.log(data.content+'listening')
-    })
-    socket.emit("test", {message: "test"})
     socket.on('disconnect', () => {
         console.log(socket.id + ' discconected')
     })
 
-    socket.on('bet', (message) => {
+    socket.on(NEW_BET, (message) => {
         if(initializeGameRun.isGameLive()) {
-            io.emit('BET', {status:false, message:'game live: bet cannot be placed'});
+            io.emit(BET_RESPONSE, {status:false, message:'game live: bet cannot be placed'});
+            console.log('game live: bet cannot be placed')
         } else {
             return fetch(`http://localhost:8089/api/bets`, {
             method: 'POST',
@@ -65,7 +59,6 @@ io.on("connection", (socket) => {
             body: JSON.stringify(message),
         })
             .then((response) => {
-                console.log(response);
             return response.json();
             })
             .catch((err) => {

@@ -19,7 +19,7 @@ export var test: any;
 let LiveGame: LiveGameStats;
 let timingStore: GameTimingStore = new GameTimingStore();
 
-let GAME_LIVE: boolean | null = null;
+let GAME_LIVE: boolean = false;
 
 export async function gameRoutine(socket: any) {
     const now = Date.now();
@@ -50,7 +50,6 @@ export async function gameRoutine(socket: any) {
     })
 }
 export async function initializeGameRoutine(socket: any) {
-    let GAME_LIVE = false;
     io = socket;
     sendMessageToClient(io, Headers.GAME, Headers.GAME_INITITIALIZED, new Message('initializing'))
     LiveGame = new LiveGameStats();
@@ -79,7 +78,7 @@ export async function gameLive() {
     // sendMessageToClient(io, Headers.GAME, Headers.GAME_LIVE, new Message('live'));
     // return delay(LiveGame.gameDuration*1000).then( () => {
     // });
-    let GAME_LIVE = true;
+    GAME_LIVE = true;
     var currentMultiplier= 1.00;
     while(currentMultiplier < LiveGame.multiplier) {
         currentMultiplier += .01;
@@ -89,6 +88,7 @@ export async function gameLive() {
     }
 }
 export async function gameEnd() {
+    GAME_LIVE = false;
     END_TIME = new Date();
     sendMessageToClient(io, Headers.GAME_HEADER, Headers.GAME_ENDING, createMessage(`crashed @ ${LiveGame.multiplier}`));
     return delay(C.GAME_END_DELAY)
@@ -107,6 +107,6 @@ function calculateDelayAndSend(header: SubHeader, multiplier: LiveGameMultiplier
     return 10000*timingStore.getPulse(multiplier);
 }
 
-export function isGameLive(): boolean | null {
+export function isGameLive(): boolean{
     return GAME_LIVE;
 }
