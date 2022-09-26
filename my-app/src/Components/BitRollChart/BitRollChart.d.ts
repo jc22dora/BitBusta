@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import './BitRollChart.css';
 export interface BitRollChartProps {
 }

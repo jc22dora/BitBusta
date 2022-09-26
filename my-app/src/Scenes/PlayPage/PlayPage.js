@@ -12,8 +12,8 @@ const UserLedger_1 = __importDefault(require("../../Components/UserLedger/UserLe
 require("./PlayPage.css");
 const socket_io_client_1 = __importDefault(require("socket.io-client"));
 const react_2 = require("react");
-const GamingHeaders_1 = require("../../Interfaces/GamingHeaders");
-const SendBet_1 = require("../../Services/SendBet");
+const GamingHeaders_1 = require("../../Interfaces/GamingHeaders/GamingHeaders");
+const SendBet_1 = require("../../Services/SendBet/SendBet");
 const socket = (0, socket_io_client_1.default)("http://localhost:8079");
 const PlayPage = () => {
     const [multiplier, setMultiplier] = (0, react_2.useState)(false);

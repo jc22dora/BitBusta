@@ -7,8 +7,8 @@ import UserLedger from "../../Components/UserLedger/UserLedger";
 import "./PlayPage.css";
 import io from 'socket.io-client';
 import { useEffect, useState} from "react";
-import { GAME_HEADER, GAME_ENDING_HEADER, GAME_INITITIALIZED_HEADER, GAME_STARTING_HEADER, NEW_MULTIPLIER_HEADER, BET_RESPONSE, BET_BUTTON } from "../../Interfaces/GamingHeaders";
-import {sendBet} from '../../Services/SendBet'
+import { GAME_HEADER, GAME_ENDING_HEADER, GAME_INITITIALIZED_HEADER, GAME_STARTING_HEADER, NEW_MULTIPLIER_HEADER, BET_RESPONSE, BET_BUTTON } from "../../Interfaces/GamingHeaders/GamingHeaders";
+import {sendBet} from '../../Services/SendBet/SendBet'
 const socket = io("http://localhost:8079");
 const PlayPage = () => {
   const [multiplier, setMultiplier] = useState(false);
@@ -19,7 +19,7 @@ const PlayPage = () => {
     sendBet(socket, bet);
   }
   useEffect(() => {
-    socket.on(GAME_HEADER, (data) => {
+    socket.on(GAME_HEADER, (data: any) => {
       if(data.subheader === NEW_MULTIPLIER_HEADER) {
         setMessage(''); 
         setMultiplier(data.message);
@@ -37,7 +37,7 @@ const PlayPage = () => {
         setMessage(data.message);
       }
     })
-    socket.on(BET_RESPONSE, (data) => {
+    socket.on(BET_RESPONSE, (data: any) => {
       if(data.status === false) {
         setBetButtonMessage(data.message);
       } else{
