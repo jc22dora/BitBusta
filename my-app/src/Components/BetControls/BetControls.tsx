@@ -3,6 +3,7 @@ import { Button} from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
+import './BetControls.css'
 
 export interface BetControlsProps {
     sendBet: (bet:number) => any,

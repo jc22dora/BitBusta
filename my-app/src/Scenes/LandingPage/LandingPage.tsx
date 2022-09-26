@@ -5,7 +5,7 @@ import SocialAndRealTime from '../../Assets/fd7d83879bdc0258ab637867faf48168.png
 import ProvablyFair from '../../Assets/af565435543d38f5534cb9c5124531dc.png';
 import Bankroll from '../../Assets/2e83c6a30845a277c701d2bca8113147.png';
 import './LandingPages.css';
-  
+    
 const LandingPage = () => {
     return <div className="LandingPage">  
       <h3 id='LandingPageHeader'>THE CLONED CRASH GAME</h3>

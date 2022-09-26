@@ -1,0 +1,17 @@
+#UserLedger {
+    display: inline;
+    
+}
+
+.user-ledger-table {
+    width: 100%;
+}
+.user-col {
+    width:50%;
+}
+table {
+    table-layout: fixed;
+}
+#even-col {
+    background-color: brown;
+}

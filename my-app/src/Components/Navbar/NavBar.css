@@ -1,0 +1,22 @@
+#navbar {
+    display: inline-block;
+}
+a.bitbusta {
+    font-family: Courier New ,sans-serif;
+    font-size: 40px;
+    color: rgb(44,48,54);
+    margin: 0;
+}
+#nav-logo-container {
+    display:inline-block;
+}
+#nav-center-container {
+    display: inline-block;
+}
+#nav-right-container {
+    float: right;
+    padding-right: 1rem;
+}
+img#PlayPage-bustabit-logo{
+    height: 45px;
+}

@@ -5,7 +5,6 @@ import ChatBox from "../../Components/ChatBox/ChatBox";
 import Navbar from "../../Components/Navbar/Navbar";
 import UserLedger from "../../Components/UserLedger/UserLedger";
 import "./PlayPage.css";
-import "../../Styles/UserLedger.css";
 import io from 'socket.io-client';
 import { useEffect, useState} from "react";
 import { GAME_HEADER, GAME_ENDING_HEADER, GAME_INITITIALIZED_HEADER, GAME_STARTING_HEADER, NEW_MULTIPLIER_HEADER, BET_RESPONSE, BET_BUTTON } from "../../Interfaces/GamingHeaders";

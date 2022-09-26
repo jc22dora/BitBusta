@@ -10,7 +10,6 @@ const ChatBox_1 = __importDefault(require("../../Components/ChatBox/ChatBox"));
 const Navbar_1 = __importDefault(require("../../Components/Navbar/Navbar"));
 const UserLedger_1 = __importDefault(require("../../Components/UserLedger/UserLedger"));
 require("./PlayPage.css");
-require("../../Styles/UserLedger.css");
 const socket_io_client_1 = __importDefault(require("socket.io-client"));
 const react_2 = require("react");
 const GamingHeaders_1 = require("../../Interfaces/GamingHeaders");
