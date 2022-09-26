@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendBet = exports.postBet = void 0;
-const GamingHeaders_1 = require("../Interfaces/GamingHeaders");
+const GamingHeaders_1 = require("../../Interfaces/GamingHeaders/GamingHeaders");
 function postBet(wager) {
     return __awaiter(this, void 0, void 0, function* () {
         let bet = {

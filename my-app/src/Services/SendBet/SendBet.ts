@@ -1,5 +1,5 @@
-import { GameBet } from "../Interfaces/GameBet/GameBet";
-import { NEW_BET } from "../Interfaces/GamingHeaders";
+import { GameBet } from "../../Interfaces/GameBet/GameBet";
+import { NEW_BET } from "../../Interfaces/GamingHeaders/GamingHeaders";
 
 export async function postBet(wager:number) {
     let bet:GameBet = {
