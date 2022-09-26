@@ -1,4 +1,5 @@
-import { GameBet } from "../../Interfaces/GameBet/GameBet";
+import { GameBet } from "../Interfaces/GameBet/GameBet";
+import { NEW_BET } from "../Interfaces/GamingHeaders";
 
 export async function postBet(wager:number) {
     let bet:GameBet = {
@@ -24,4 +25,18 @@ export async function postBet(wager:number) {
     .catch((err) => {
       return { status: 'fail', message: 'API CALL ERROR', error: err.message };
     });
+}
+
+export function sendBet(socket:any, wager:number) {
+  let bet:GameBet = {
+    GameId: 1,
+    UserId: 1,
+    UserBetTime: new Date(),
+    UserBetPullTime: new Date(),
+    UserBet: 21,
+    UserBetPayout: wager
+  }
+  socket.emit(NEW_BET, bet, (response: any) => {
+    console.log(response); // "got it"
+  });
 }

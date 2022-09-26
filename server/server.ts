@@ -7,6 +7,8 @@ import cors = require('cors');
 import initializeGameRun = require("./utils/GameRun/GameRun.js");
 import util = require('node:util');
 import * as api from './services/api/Api'
+import { BET_RESPONSE, GAME, NEW_BET } from "./utils/Headers/Headers.js";
+import fetch from 'node-fetch'
 let CONTINUE = true;
 let SERVER_STATUS = false;
 let NUM_GAME = 10;
@@ -35,23 +37,36 @@ server.on('listening', () => {
             initializeGameRun.gameRoutine(io);
         });
     });
-    
-    
 })
 
 io.on("connection", (socket) => {
     console.log(socket.id+' connected');
-    socket.on("test", (data) => { 
-        console.log(data.content)
-    })
-    socket.on('listening', (data) => {
-        console.log(data.content+'listening')
-    })
-    socket.emit("test", {message: "test"})
     socket.on('disconnect', () => {
         console.log(socket.id + ' discconected')
     })
-}) 
+
+    socket.on(NEW_BET, (message) => {
+        if(initializeGameRun.isGameLive()) {
+            io.emit(BET_RESPONSE, {status:false, message:'game live: bet cannot be placed'});
+            console.log('game live: bet cannot be placed')
+        } else {
+            return fetch(`http://localhost:8089/api/bets`, {
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(message),
+        })
+            .then((response) => {
+            return response.json();
+            })
+            .catch((err) => {
+            return { status: 'fail', message: 'API CALL ERROR', error: err.message };
+            });
+        }
+    })
+})
 
 export function getIo() {
     return io;

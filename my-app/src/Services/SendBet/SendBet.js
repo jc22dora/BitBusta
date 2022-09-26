@@ -9,7 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postBet = void 0;
+exports.sendBet = exports.postBet = void 0;
+const GamingHeaders_1 = require("../Interfaces/GamingHeaders");
 function postBet(wager) {
     return __awaiter(this, void 0, void 0, function* () {
         let bet = {
@@ -38,4 +39,18 @@ function postBet(wager) {
     });
 }
 exports.postBet = postBet;
+function sendBet(socket, wager) {
+    let bet = {
+        GameId: 1,
+        UserId: 1,
+        UserBetTime: new Date(),
+        UserBetPullTime: new Date(),
+        UserBet: 21,
+        UserBetPayout: wager
+    };
+    socket.emit(GamingHeaders_1.NEW_BET, bet, (response) => {
+        console.log(response); // "got it"
+    });
+}
+exports.sendBet = sendBet;
 //# sourceMappingURL=SendBet.js.map

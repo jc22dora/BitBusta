@@ -13,3 +13,5 @@ export declare const GAME_STARTING: SubHeader;
 export declare const GAME_LIVE: SubHeader;
 export declare const NEW_MULTIPLIER: SubHeader;
 export declare const GAME_ENDING: SubHeader;
+export declare const NEW_BET = "BET";
+export declare const BET_RESPONSE = "BET_RESPONSE";

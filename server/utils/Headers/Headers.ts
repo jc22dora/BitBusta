@@ -20,3 +20,6 @@ export const GAME_STARTING: SubHeader = 'GAME_STARTING';
 export const GAME_LIVE: SubHeader = 'LIVE';
 export const NEW_MULTIPLIER:  SubHeader = 'NEW_MULTIPLIER';
 export const GAME_ENDING: SubHeader = 'GAME_ENDING';
+
+export const NEW_BET = 'BET'
+export const BET_RESPONSE = 'BET_RESPONSE'

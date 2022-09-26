@@ -7,15 +7,16 @@ import UserLedger from "../../Components/UserLedger/UserLedger";
 import "./PlayPage.css";
 import io from 'socket.io-client';
 import { useEffect, useState} from "react";
-import { GAME_HEADER, GAME_ENDING_HEADER, GAME_INITITIALIZED_HEADER, GAME_STARTING_HEADER, NEW_MULTIPLIER_HEADER } from "../../Interfaces/GamingHeaders/GamingHeaders.js";
-import {postBet} from '../../Services/SendBet/SendBet'
+import { GAME_HEADER, GAME_ENDING_HEADER, GAME_INITITIALIZED_HEADER, GAME_STARTING_HEADER, NEW_MULTIPLIER_HEADER, BET_RESPONSE, BET_BUTTON } from "../../Interfaces/GamingHeaders";
+import {sendBet} from '../../Services/SendBet'
 const socket = io("http://localhost:8079");
 const PlayPage = () => {
   const [multiplier, setMultiplier] = useState(false);
   const [message, setMessage] = useState('');
-  const sendBet = async(bet: number) => {
-    let resp = await postBet(bet);
-    console.log(resp)
+  const [betButtonMessage, setBetButtonMessage] = useState(BET_BUTTON)
+  const [betAbility, setBetAbility] = useState(true);
+  const emitBet = (bet: number) => {
+    sendBet(socket, bet);
   }
   useEffect(() => {
     socket.on(GAME_HEADER, (data) => {
@@ -26,12 +27,21 @@ const PlayPage = () => {
       if(data.subheader === GAME_ENDING_HEADER) {
         setMultiplier(false);
         setMessage(data.message);
+        setBetAbility(true);
+        setBetButtonMessage(BET_BUTTON);
       }
       if(data.subheader === GAME_INITITIALIZED_HEADER) {
         setMessage(data.message);
       }
       if(data.subheader === GAME_STARTING_HEADER) {
         setMessage(data.message);
+      }
+    })
+    socket.on(BET_RESPONSE, (data) => {
+      if(data.status === false) {
+        setBetButtonMessage(data.message);
+      } else{
+
       }
     })
   }, [socket])
@@ -41,7 +51,7 @@ const PlayPage = () => {
         <div id="grid-container">
             <div id="left-side">
                 <BitRollChart props={{multiplier, message}}></BitRollChart>
-                <BetControls sendBet={sendBet}></BetControls> 
+                <BetControls sendBet={emitBet} betButtonMessage={betButtonMessage} betAbility={betAbility} setBetAbility={setBetAbility}></BetControls> 
                 <ChatBox></ChatBox>
     </div>
             <div id="right-side">
